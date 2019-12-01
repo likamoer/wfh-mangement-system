@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Message } from 'element-ui';
 
 axios.defaults.timeout = 10000;
-axios.defaults.baseURL ='http://47.94.133.35:5500/'; // 线上
+axios.defaults.baseURL = 'http://47.94.133.35:5500/'; // 线上
 // axios.defaults.baseURL ='http://127.0.0.1:7777/'; // 线下
 
 // const token = sessionStorage.getItem('token')
@@ -14,42 +14,43 @@ axios.defaults.baseURL ='http://47.94.133.35:5500/'; // 线上
 
 //http request 拦截器
 axios.interceptors.request.use(
-  config => {
-    const token = sessionStorage.getItem('token')
-    const user = sessionStorage.getItem('user')
-    config.headers = {
-      'Content-Type':'application/json'
+    config => {
+        console.log('dwadawdaw')
+        const token = sessionStorage.getItem('token')
+        const user = sessionStorage.getItem('user')
+        config.headers = {
+            'Content-Type': 'application/json'
+        }
+        if (token) {
+            config.headers['token'] = token
+            config.headers['user'] = user
+        }
+        return config
+    },
+    error => {
+        return Promise.reject(err)
     }
-    if(token){
-      config.headers['token'] = token
-      config.headers['user'] = user
-    }
-    return config
-  },
-  error => {
-    return Promise.reject(err)
-  }
 );
 
 
 //http response 拦截器
 axios.interceptors.response.use(
-  response => {
-    // console.log(response, window.vm.$router, '==============')
-    if (response.headers.user_token) {
-      sessionStorage.setItem('token', response.headers.user_token)
+    response => {
+        console.log(response.headers.user_token, '==============')
+        if (response.headers.user_token) {
+            sessionStorage.setItem('token', response.headers.user_token)
+        }
+        if (response.data.statuscode == 412) {
+            window.vm.$router.push({
+                path: "/login",
+                querry: { redirect: window.vm.$router.currentRoute.fullPath } //从哪个页面跳转
+            })
+        }
+        return response
+    },
+    error => {
+        return Promise.reject(error)
     }
-    if(response.data.statuscode == 412){
-      window.vm.$router.push({
-        path:"/login",
-        querry:{redirect: window.vm.$router.currentRoute.fullPath} //从哪个页面跳转
-      })
-    }
-    return response
-  },
-  error => {
-    return Promise.reject(error)
-  }
 )
 
 
@@ -60,18 +61,18 @@ axios.interceptors.response.use(
  * @returns {Promise}
  */
 
-export function get(url,params={}){
-  return new Promise((resolve,reject) => {
-    axios.get(url,{
-      params:params
+export function get(url, params = {}) {
+    return new Promise((resolve, reject) => {
+        axios.get(url, {
+                params: params
+            })
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(err => {
+                reject(err)
+            })
     })
-    .then(response => {
-      resolve(response.data);
-    })
-    .catch(err => {
-      reject(err)
-    })
-  })
 }
 
 
@@ -82,49 +83,49 @@ export function get(url,params={}){
  * @returns {Promise}
  */
 
- export function post(url,data = {}){
-   return new Promise((resolve,reject) => {
-     axios.post(url,data)
-          .then(response => {
-            resolve(response.data);
-          },err => {
-            reject(err)
-          })
-   })
- }
+export function post(url, data = {}) {
+    return new Promise((resolve, reject) => {
+        axios.post(url, data)
+            .then(response => {
+                resolve(response.data);
+            }, err => {
+                reject(err)
+            })
+    })
+}
 
- /**
+/**
  * 封装patch请求
  * @param url
  * @param data
  * @returns {Promise}
  */
 
-export function patch(url,data = {}){
-  return new Promise((resolve,reject) => {
-    axios.patch(url,data)
-         .then(response => {
-           resolve(response.data);
-         },err => {
-           reject(err)
-         })
-  })
+export function patch(url, data = {}) {
+    return new Promise((resolve, reject) => {
+        axios.patch(url, data)
+            .then(response => {
+                resolve(response.data);
+            }, err => {
+                reject(err)
+            })
+    })
 }
 
- /**
+/**
  * 封装put请求
  * @param url
  * @param data
  * @returns {Promise}
  */
 
-export function put(url,data = {}){
-  return new Promise((resolve,reject) => {
-    axios.put(url,data)
-         .then(response => {
-           resolve(response.data);
-         },err => {
-           reject(err)
-         })
-  })
+export function put(url, data = {}) {
+    return new Promise((resolve, reject) => {
+        axios.put(url, data)
+            .then(response => {
+                resolve(response.data);
+            }, err => {
+                reject(err)
+            })
+    })
 }
