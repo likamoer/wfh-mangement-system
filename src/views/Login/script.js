@@ -18,7 +18,7 @@ export default {
                 // token保存
                 // let token = 'asfesafeafefaefe'
                 // sessionStorage.setItem('token', token)
-                console.log(res, '=====')
+                console.log(res, '===res===')
                 sessionStorage.setItem('token', res.token)
                 sessionStorage.setItem('user', res.data.account)
                 sessionStorage.setItem('role', res.data.role)

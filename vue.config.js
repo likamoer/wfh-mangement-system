@@ -19,7 +19,7 @@ module.exports = {
         }
     },
     devServer: {
-        // hot: false,
+        hot: false,
         proxy: {
             '/api': {
                 target: 'http://47.94.133.35:5500',
